@@ -45,6 +45,7 @@ Devise.setup do |config|
   # saml configuration for devise
   $callback = Rails.env.development? ? 'http://localhost:3000' : ENV['CALLBACK_ADDRESS']
   config.saml_route_helper_prefix = 'saml'
+  config.saml_logger = true
   config.saml_create_user = true
   config.saml_update_user = false
   config.saml_default_user_key = :email
