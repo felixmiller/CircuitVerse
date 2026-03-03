@@ -77,8 +77,8 @@ Rails.application.configure do
   config.action_mailer.perform_caching = false
 
   # Mailer settings
-  config.action_mailer.default_url_options = { host: ENV.fetch("CALLBACK_ADDRESS") }
-  config.action_mailer.asset_host = ENV.fetch("CALLBACK_ADDRESS")
+  config.action_mailer.default_url_options = { host: ENV.fetch("CALLBACK_ADDRESS", "localhost") }
+  config.action_mailer.asset_host = ENV.fetch("CALLBACK_ADDRESS", "localhost")
 
   # TODO: configure mailer delivery method
   # Option A — SMTP (university mail server):
