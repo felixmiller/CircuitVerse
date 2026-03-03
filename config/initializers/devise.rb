@@ -49,7 +49,7 @@ Devise.setup do |config|
   config.saml_update_user = false
   config.saml_default_user_key = :email
   config.saml_session_index_key = :session_index
-  config.saml_use_subject = true
+  config.saml_use_subject = false
   config.idp_settings_adapter = nil
   config.saml_configure do |settings|
     settings.assertion_consumer_service_url     = "#{$callback}/users/saml/auth"
