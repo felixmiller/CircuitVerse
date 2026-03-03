@@ -10,7 +10,7 @@ default_flipper_features = {
   project_comments: true,
   lms_integration: true,
   vuesim: false,
-  block_registration: false,
+  block_registration: true,
   active_storage_s3: true,
   contests: false,
   circuit_explore_page: false,
@@ -40,6 +40,9 @@ if ENV["DISABLE_FLIPPER"].blank? && !Rails.env.test?
     end
   end
 end
+
+# Always block self-registration in production — SAML/Shibboleth is used instead
+Flipper.enable(:block_registration) if Rails.env.production? && ENV["DISABLE_FLIPPER"].blank?
 
 Flipper::UI.configure do |config|
   config.fun = false
