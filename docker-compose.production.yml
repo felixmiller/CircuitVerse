@@ -1,0 +1,59 @@
+services:
+  db:
+    image: postgres:14
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/pgdata
+    # No ports exposed — only accessible within Docker network
+
+  redis:
+    image: redis:7.0-alpine
+    restart: unless-stopped
+    # No ports exposed
+
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:3000:3000"   # ← bind to localhost ONLY
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - storage_data:/usr/src/app/storage
+      - uploads_data:/usr/src/app/public/uploads
+    command: ./bin/rails server -b 0.0.0.0 -p 3000
+
+  sidekiq:
+    build:
+      context: .
+      dockerfile: Dockerfile.production
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      REDIS_URL: ${REDIS_URL}
+    volumes:
+      - storage_data:/usr/src/app/storage
+    command: bundle exec sidekiq -q default -q mailers
+
+volumes:
+  postgres_data:
+  storage_data:
+  uploads_data:
