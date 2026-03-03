@@ -11,6 +11,8 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
+  # TODO: update sender address once email is configured
+  # config.mailer_sender = 'noreply@circuitverse.ee.hm.edu'
   config.mailer_sender = 'noreply@circuitverse.org'
 
   # Configure the class responsible to send e-mails.
@@ -18,21 +20,22 @@ Devise.setup do |config|
 
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'
-  config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
-    :skip_jwt => true,
-    :scope => 'email, profile',
-    prompt: 'select_account',
-  }
-  config.omniauth :facebook, ENV['FACEBOOK_CLIENT_ID'], ENV['FACEBOOK_CLIENT_SECRET'],  {
-    :info_fields => 'email,name'
-  }
-  config.omniauth :github, ENV['GITHUB_CLIENT_ID'], ENV['GITHUB_CLIENT_SECRET'], {
-    :scope => 'read:user,user:email'
-  }
-  config.omniauth :gitlab, ENV['GITLAB_CLIENT_ID'], ENV['GITLAB_CLIENT_SECRET'], {
-    :scope => 'read_user'
-  }
-  config.omniauth :microsoft_office365,ENV['MICROSOFT_CLIENT_ID'], ENV['MICROSOFT_CLIENT_SECRET']
+  # OAuth providers disabled for university deployment (SAML/Shibboleth is used instead)
+  # config.omniauth :google_oauth2, ENV['GOOGLE_CLIENT_ID'], ENV['GOOGLE_CLIENT_SECRET'], {
+  #   :skip_jwt => true,
+  #   :scope => 'email, profile',
+  #   prompt: 'select_account',
+  # }
+  # config.omniauth :facebook, ENV['FACEBOOK_CLIENT_ID'], ENV['FACEBOOK_CLIENT_SECRET'],  {
+  #   :info_fields => 'email,name'
+  # }
+  # config.omniauth :github, ENV['GITHUB_CLIENT_ID'], ENV['GITHUB_CLIENT_SECRET'], {
+  #   :scope => 'read:user,user:email'
+  # }
+  # config.omniauth :gitlab, ENV['GITLAB_CLIENT_ID'], ENV['GITLAB_CLIENT_SECRET'], {
+  #   :scope => 'read_user'
+  # }
+  # config.omniauth :microsoft_office365,ENV['MICROSOFT_CLIENT_ID'], ENV['MICROSOFT_CLIENT_SECRET']
 
   # Load and configure the ORM. Supports :active_record (default) and
   # :mongoid (bson_ext recommended) by default. Other ORMs may be

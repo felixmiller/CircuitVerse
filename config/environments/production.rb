@@ -24,12 +24,8 @@ Rails.application.configure do
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
 
-  # Store uploaded files (use Amazon S3 in production)
-  if ENV["AWS_S3_BUCKET_NAME"].present?
-    config.active_storage.service = :amazon_custom
-  else
-    config.active_storage.service = :amazon
-  end
+  # Store uploaded files
+  config.active_storage.service = ENV.fetch("ACTIVE_STORAGE_SERVICE", "amazon").to_sym
 
   # Assume all access to the app is happening through a SSL-terminating reverse proxy.
   config.assume_ssl = true
@@ -80,13 +76,25 @@ Rails.application.configure do
   # config.action_mailer.raise_delivery_errors = false
   config.action_mailer.perform_caching = false
 
-  # Mailer settings (preserved from Rails 7)
-  config.action_mailer.default_url_options = { host: "https://circuitverse.org/" }
-  config.action_mailer.asset_host = "https://circuitverse.org"
+  # Mailer settings
+  config.action_mailer.default_url_options = { host: ENV.fetch("CALLBACK_ADDRESS") }
+  config.action_mailer.asset_host = ENV.fetch("CALLBACK_ADDRESS")
 
-  aws_credentials = Aws::Credentials.new(ENV['AWS_ACCESS_KEY_ID_SES'], ENV['AWS_SECRET_ACCESS_KEY_SES'])
-  config.action_mailer.delivery_method = :ses_v2
-  config.action_mailer.ses_v2_settings = { credentials: aws_credentials }
+  # TODO: configure mailer delivery method
+  # Option A — SMTP (university mail server):
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #   address:              ENV["SMTP_HOST"],
+  #   port:                 ENV.fetch("SMTP_PORT", 587).to_i,
+  #   user_name:            ENV["SMTP_USER"],
+  #   password:             ENV["SMTP_PASSWORD"],
+  #   authentication:       :plain,
+  #   enable_starttls_auto: true
+  # }
+  # Option B — temporary external provider (e.g. Mailgun, Brevo):
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = { ... }
+  config.action_mailer.delivery_method = :test  # silently discard emails until configured
 
   # Web Push (VAPID) configuration (preserved from Rails 7)
   config.vapid_public_key = ENV["VAPID_PUBLIC_KEY"] || ""
@@ -111,10 +119,7 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [:id]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  # config.hosts = [
-  #   "example.com",     # Allow requests from example.com
-  #   /.*\.example\.com/ # Allow requests from subdomains like `www.example.com`
-  # ]
+  config.hosts = ["circuitverse.ee.hm.edu"]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
