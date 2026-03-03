@@ -28,9 +28,6 @@ services:
       - redis
     env_file:
       - .env.production
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
     volumes:
       - storage_data:/usr/src/app/storage
       - uploads_data:/usr/src/app/public/uploads
@@ -46,9 +43,6 @@ services:
       - redis
     env_file:
       - .env.production
-    environment:
-      DATABASE_URL: ${DATABASE_URL}
-      REDIS_URL: ${REDIS_URL}
     volumes:
       - storage_data:/usr/src/app/storage
     command: bundle exec sidekiq -q default -q mailers
