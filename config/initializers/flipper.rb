@@ -41,8 +41,11 @@ if ENV["DISABLE_FLIPPER"].blank? && !Rails.env.test?
   end
 end
 
-# Always block self-registration in production — SAML/Shibboleth is used instead
-Flipper.enable(:block_registration) if Rails.env.production? && ENV["DISABLE_FLIPPER"].blank?
+# Always enforce these flags in production — SAML/Shibboleth is used instead of self-registration/OAuth
+if Rails.env.production? && ENV["DISABLE_FLIPPER"].blank?
+  Flipper.enable(:block_registration)
+  Flipper.enable(:sso_integration)
+end
 
 Flipper::UI.configure do |config|
   config.fun = false
