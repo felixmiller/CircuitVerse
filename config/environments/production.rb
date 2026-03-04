@@ -80,13 +80,14 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV.fetch("CALLBACK_ADDRESS", "localhost") }
   config.action_mailer.asset_host = ENV.fetch("CALLBACK_ADDRESS", "localhost")
 
-  # LRZ open mail relay (no authentication — HM server IP is whitelisted)
-  # IT note: mailout.lrz.de is temporary; update when HM provides a permanent solution
+  # Host Postfix relay → mailout.lrz.de (LRZ open relay, IP-whitelisted)
+  # Docker containers cannot reach mailout.lrz.de directly (NAT changes source IP),
+  # so we relay through Postfix on the host (172.17.0.1 = Docker bridge).
+  # IT note: mailout.lrz.de is temporary; update when HM provides a permanent solution.
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'mailout.lrz.de',
-    port:                 25,
-    enable_starttls_auto: true
+    address: 'host.docker.internal',
+    port:    25
   }
 
   # Web Push (VAPID) configuration (preserved from Rails 7)

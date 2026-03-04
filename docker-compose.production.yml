@@ -28,6 +28,8 @@ services:
       - redis
     env_file:
       - .env.production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # allows reaching host Postfix relay
     volumes:
       - storage_data:/usr/src/app/storage
       - uploads_data:/usr/src/app/public/uploads
@@ -43,6 +45,8 @@ services:
       - redis
     env_file:
       - .env.production
+    extra_hosts:
+      - "host.docker.internal:host-gateway"  # allows reaching host Postfix relay
     volumes:
       - storage_data:/usr/src/app/storage
     command: bundle exec sidekiq -q default -q mailers
