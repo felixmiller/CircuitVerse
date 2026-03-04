@@ -112,9 +112,6 @@ Rails.application.configure do
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 
-  # Disable ActiveRecord Logging (preserved from Rails 7)
-  config.active_record.logger = nil
-
   # Only use :id for inspections in production (Rails 8 feature)
   config.active_record.attributes_for_inspect = [:id]
 
