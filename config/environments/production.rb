@@ -80,21 +80,14 @@ Rails.application.configure do
   config.action_mailer.default_url_options = { host: ENV.fetch("CALLBACK_ADDRESS", "localhost") }
   config.action_mailer.asset_host = ENV.fetch("CALLBACK_ADDRESS", "localhost")
 
-  # TODO: configure mailer delivery method
-  # Option A — SMTP (university mail server):
-  # config.action_mailer.delivery_method = :smtp
-  # config.action_mailer.smtp_settings = {
-  #   address:              ENV["SMTP_HOST"],
-  #   port:                 ENV.fetch("SMTP_PORT", 587).to_i,
-  #   user_name:            ENV["SMTP_USER"],
-  #   password:             ENV["SMTP_PASSWORD"],
-  #   authentication:       :plain,
-  #   enable_starttls_auto: true
-  # }
-  # Option B — temporary external provider (e.g. Mailgun, Brevo):
-  # config.action_mailer.delivery_method = :smtp
-  # config.action_mailer.smtp_settings = { ... }
-  config.action_mailer.delivery_method = :test  # silently discard emails until configured
+  # LRZ open mail relay (no authentication — HM server IP is whitelisted)
+  # IT note: mailout.lrz.de is temporary; update when HM provides a permanent solution
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+    address:              'mailout.lrz.de',
+    port:                 25,
+    enable_starttls_auto: true
+  }
 
   # Web Push (VAPID) configuration (preserved from Rails 7)
   config.vapid_public_key = ENV["VAPID_PUBLIC_KEY"] || ""
