@@ -59,9 +59,8 @@ Devise.setup do |config|
     settings.issuer                             = "#{$callback}/users/saml/metadata"
     settings.authn_context                      = ""
     settings.idp_slo_target_url                 = ""
-    settings.idp_sso_target_url                 = ENV['IDP_SSO_URL']
-    settings.idp_cert_fingerprint               = ENV['IDP_FINGERPRINT']
-    settings.idp_cert_fingerprint_algorithm     = 'http://www.w3.org/2000/09/xmldsig#sha256'
+    settings.idp_sso_target_url = ENV['IDP_SSO_URL']
+    settings.idp_cert           = ENV['IDP_CERT']  # full IdP cert, more robust than fingerprint
 
     # SP certificate and private key for SAML assertion decryption.
     # Both supplied via env vars (never commit the private key).
