@@ -65,9 +65,9 @@ Devise.setup do |config|
 
     # SP certificate and private key for SAML assertion decryption.
     # Both supplied via env vars (never commit the private key).
-    settings.certificate  = ENV['SAML_SP_CERT']
-    settings.private_key  = ENV['SAML_SP_KEY']
-    settings.sp_cert_enc  = ENV['SAML_SP_CERT']  # same cert for encryption KeyDescriptor
+    settings.certificate = ENV['SAML_SP_CERT']
+    settings.private_key = ENV['SAML_SP_KEY']
+    settings.security[:want_assertions_encrypted] = true  # adds KeyDescriptor use="encryption" to metadata
   end
 
   # Custom hook: set required fields and auto-confirm new SAML-provisioned users.
