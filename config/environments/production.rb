@@ -111,7 +111,7 @@ Rails.application.configure do
   config.active_record.attributes_for_inspect = [:id]
 
   # Enable DNS rebinding protection and other `Host` header attacks.
-  config.hosts = ["circuitverse.ee.hm.edu"]
+  config.hosts = [URI.parse(ENV.fetch("CALLBACK_ADDRESS", "http://localhost")).host]
   #
   # Skip DNS rebinding protection for the default health check endpoint.
   # config.host_authorization = { exclude: ->(request) { request.path == "/up" } }
