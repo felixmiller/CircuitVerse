@@ -23,9 +23,6 @@
               <a class="nav-link navbar-item navbar-text <%= request.path == "/explore" ? "active" : "" %>" href="/explore"><%= t("layout.link_to_explore") %></a>
             </li>
           <% end %>
-          <li class="nav-item">
-            <a class="nav-link navbar-item navbar-text" href="/teachers"><%= t("layout.link_to_teachers") %></a>
-          </li>
           <% if Flipper.enabled?(:contests, current_user) %>
             <li class="nav-item">
               <a class="nav-link navbar-item navbar-text <%= request.path == "/contests" ? "active" : "" %>" href="/contests"><%= t("layout.link_to_contests") %></a>
@@ -80,7 +77,7 @@
             </div>
           <% else %>
             <div class="navbar-auth-buttons d-flex flex-lg-row flex-column gap-2">
-              <a class="btn btn-login px-3 d-flex align-items-center justify-content-center" href="/users/sign_in"><%= t("login") %></a>
+              <a class="btn btn-login px-3 d-flex align-items-center justify-content-center" href="/users/saml/sign_in"><%= t("login") %></a>
             </div>
           <% end %>
         </div>

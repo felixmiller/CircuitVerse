@@ -64,7 +64,9 @@ Devise.setup do |config|
     # Both supplied via env vars (never commit the private key).
     settings.certificate = ENV['SAML_SP_CERT']
     settings.private_key = ENV['SAML_SP_KEY']
-    settings.security[:want_assertions_encrypted] = true  # adds KeyDescriptor use="encryption" to metadata
+    # Encryption is required in production; optional in dev (test IdP may not support it)
+    settings.security[:want_assertions_encrypted] = Rails.env.production?
+    settings.security[:soft] = Rails.env.development?  # don't hard-fail on cert validation in dev
   end
 
   # Custom hook: set required fields and auto-confirm new SAML-provisioned users.
