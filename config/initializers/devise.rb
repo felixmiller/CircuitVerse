@@ -62,6 +62,15 @@ Devise.setup do |config|
     settings.idp_sso_target_url                 = ENV['IDP_SSO_URL']
     settings.idp_cert_fingerprint               = ENV['IDP_FINGERPRINT']
     settings.idp_cert_fingerprint_algorithm     = 'http://www.w3.org/2000/09/xmldsig#sha256'
+
+    # SP certificate and private key for assertion decryption.
+    # Certificate (public) is committed at config/saml/sp.crt.
+    # Private key must be set via SAML_SP_KEY env var (never commit).
+    sp_cert_path = Rails.root.join('config', 'saml', 'sp.crt')
+    if File.exist?(sp_cert_path)
+      settings.certificate = File.read(sp_cert_path).gsub(/-----[^-]+-----|\n/, '')
+    end
+    settings.private_key = ENV['SAML_SP_KEY']
   end
 
   # Custom hook: set required fields and auto-confirm new SAML-provisioned users.

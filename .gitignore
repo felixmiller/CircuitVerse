@@ -106,3 +106,4 @@ node_modules
 
 *.swp
 .env.production
+config/saml/sp.key
