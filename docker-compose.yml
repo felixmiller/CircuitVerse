@@ -88,6 +88,13 @@ services:
     ports:
       - "1080:1080"
       - "1025:1025"
+  idp:
+    image: kristophjunge/test-saml-idp
+    ports:
+      - "8080:8080"
+    environment:
+      SIMPLESAMLPHP_SP_ENTITY_ID: "http://localhost:3000/users/saml/metadata"
+      SIMPLESAMLPHP_SP_ASSERTION_CONSUMER_SERVICE: "http://localhost:3000/users/saml/auth"
 volumes:
   ruby_bundle:
   postgres_data:
