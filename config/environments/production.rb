@@ -86,8 +86,9 @@ Rails.application.configure do
   # IT note: mailout.lrz.de is temporary; update when HM provides a permanent solution.
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address: 'host.docker.internal',
-    port:    25
+    address:              'host.docker.internal',
+    port:                 25,
+    enable_starttls_auto: false  # internal hop to host Postfix, TLS not needed
   }
 
   # Web Push (VAPID) configuration (preserved from Rails 7)
