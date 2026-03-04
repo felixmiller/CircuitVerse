@@ -1,2 +1,4 @@
-    "urn:mace:dir:attribute-def:uid": "uid"
+    "uid": "name"
+    "urn:mace:dir:attribute-def:uid": "name"
     "email": "email"
+    "mail": "email"

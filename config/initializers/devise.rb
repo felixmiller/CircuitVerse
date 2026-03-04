@@ -64,6 +64,25 @@ Devise.setup do |config|
     settings.idp_cert_fingerprint_algorithm     = 'http://www.w3.org/2000/09/xmldsig#sha256'
   end
 
+  # Custom hook: set required fields and auto-confirm new SAML-provisioned users.
+  # The IdP is the identity authority, so no email confirmation is needed.
+  config.saml_update_resource_hook = Proc.new do |user, saml_response, auth_value|
+    saml_response.attributes.resource_keys.each do |key|
+      user.send("#{key}=", saml_response.attribute_value_by_resource_key(key)) if user.respond_to?("#{key}=")
+    end
+
+    if Devise.saml_use_subject
+      user.send("#{Devise.saml_default_user_key}=", auth_value)
+    end
+
+    if user.new_record?
+      user.password = Devise.friendly_token(20)
+      user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
+    end
+
+    user.save!
+  end
+
   # ==> Configuration for any authentication mechanism
   # Configure which keys are used when authenticating a user. The default is
   # just :email. You can configure it to use [:username, :subdomain], so for
