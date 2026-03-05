@@ -9,7 +9,7 @@ default_flipper_features = {
   forum: false,
   project_comments: true,
   lms_integration: true,
-  vuesim: false,
+  vuesim: true,
   block_registration: true,
   active_storage_s3: true,
   contests: false,
@@ -45,6 +45,7 @@ end
 if Rails.env.production? && ENV["DISABLE_FLIPPER"].blank?
   Flipper.enable(:block_registration)
   Flipper.enable(:sso_integration)
+  Flipper.enable(:vuesim)
 end
 
 Flipper::UI.configure do |config|
