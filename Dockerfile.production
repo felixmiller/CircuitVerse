@@ -54,9 +54,6 @@ COPY cv-frontend-vue/ ./
 # Create the target directory structure
 RUN mkdir -p /output/simulatorvue
 
-# Set environment to ensure consistent build output
-ENV DESKTOP_MODE=false
-
 # Build Vue simualtor
 RUN npm run build
 
