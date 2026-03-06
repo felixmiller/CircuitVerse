@@ -69,6 +69,8 @@ FROM --platform=$BUILDPLATFORM ruby:3.2.1-slim as app
 
 # Copy compiled assets and application from builder and Vue simulator build stages
 COPY --from=builder /usr/src/app /usr/src/app
+# Remove symlinks from dev setup that would block the COPY below
+RUN rm -rf /usr/src/app/public/simulatorvue
 COPY --from=simulator_vue_build /output/simulatorvue/ /usr/src/app/public/simulatorvue
 
 ENV RAILS_ENV=production
