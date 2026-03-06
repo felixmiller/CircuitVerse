@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
   <head>
     <% content_for(:html_title) { "CircuitVerse - Digital Simulator" } %>
@@ -8,7 +9,7 @@
       window.isUserLoggedIn = <%= user_signed_in? %>;
       window.embed = true;
     </script>
-    <script type="module" src="/simulator-v0/simulator-v0.js"></script>
+    <script type="module" src="/simulatorvue/v0/simulator-v0.js"></script>
 
   </head>
   <body>
