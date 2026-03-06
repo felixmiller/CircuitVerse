@@ -60,13 +60,8 @@ ENV DESKTOP_MODE=false
 # Build Vue simualtor
 RUN npm run build
 
-# Copy built files to a known location
-RUN cp -r public/simulatorvue/* /output/simulatorvue/ || \
-    cp -r ../public/simulatorvue/* /output/simulatorvue/ || \
-    find . -name "*.js" -o -name "*.css" -o -name "*.html" | head -10
-
-# Debug: show what we actually built
-RUN ls -laR /output/
+# Copy built files to a known location (vite outputs to dist/simulatorvue/)
+RUN cp -r dist/simulatorvue/* /output/simulatorvue/
 
 # The files should now be in /app/public/simulatorvue/
 
