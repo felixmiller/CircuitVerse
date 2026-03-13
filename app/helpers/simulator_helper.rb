@@ -31,6 +31,16 @@ module SimulatorHelper
     !data_url[("data:image/jpeg;base64,".length)..].to_s.empty?
   end
 
+  def attach_circuit_preview(image_file)
+    return unless image_file
+
+    @project.circuit_preview.attach(
+      io: image_file,
+      filename: "preview_#{Time.zone.now.to_f.to_s.sub('.', '')}.jpeg",
+      content_type: "img/jpeg"
+    )
+  end
+
   def sanitize_data(project, data)
     return data if project&.assignment_id.blank? || data.blank?
 
