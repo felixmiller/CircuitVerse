@@ -99,6 +99,9 @@ class Api::V1::ProjectsController < Api::V1::BaseController
     image_file = return_image_file(params[:image])
 
     @project.image_preview = image_file
+    # ActiveStorage
+    io_image_file = parse_image_data_url(params[:image])
+    attach_circuit_preview(io_image_file)
     if @project.save
       image_file.close
       File.delete(image_file) if check_to_delete(params[:image])
@@ -194,6 +197,10 @@ class Api::V1::ProjectsController < Api::V1::BaseController
     def update_project_params
       @image_file = return_image_file(params[:image])
       @project.image_preview = @image_file
+      # ActiveStorage
+      @project.circuit_preview.purge if @project.circuit_preview.attached?
+      io_image_file = parse_image_data_url(params[:image])
+      attach_circuit_preview(io_image_file)
       @project.name = sanitize(params[:name])
     end
 
