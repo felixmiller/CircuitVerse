@@ -69,6 +69,22 @@ class ApplicationController < ActionController::Base
       stored_location_for(resource_or_scope) || super
     end
 
+    # Redirect unauthenticated users straight to SAML IdP in production
+    # (no local username/password form). In dev, fall back to default Devise
+    # login so the test IdP form remains accessible.
+    def authenticate_user!
+      unless current_user
+        store_user_location! if storable_location?
+        if Rails.env.production?
+          redirect_to "/users/saml/sign_in", allow_other_host: true
+        else
+          super
+        end
+        return
+      end
+      super
+    end
+
     def prepare_search_data
       @search_countries = countries_for_search_filters(request)
       @current_filters = {
