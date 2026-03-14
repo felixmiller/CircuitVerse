@@ -114,19 +114,27 @@ class SimulatorController < ApplicationController
   end
 
   def post_issue
-    url = ENV.fetch("SLACK_ISSUE_HOOK_URL", nil)
-
-    # Post the issue circuit data
+    # Save circuit data for admin review
     issue_circuit_data = IssueCircuitDatum.new
     issue_circuit_data.data = params[:circuit_data]
     issue_circuit_data.save!
 
-    issue_circuit_data_id = issue_circuit_data.id
+    circuit_data_url = "#{request.base_url}/simulator/issue_circuit_data/#{issue_circuit_data.id}"
 
-    # Send it over to slack hook
-    circuit_data_url = "#{request.base_url}/simulator/issue_circuit_data/#{issue_circuit_data_id}"
-    text = "#{params[:text]}\nCircuit Data: #{circuit_data_url}"
-    HTTP.post(url, json: { text: text }) if Flipper.enabled?(:slack_issue_notification)
+    # Slack notification (upstream default)
+    if Flipper.enabled?(:slack_issue_notification)
+      url = ENV.fetch("SLACK_ISSUE_HOOK_URL", nil)
+      text = "#{params[:text]}\nCircuit Data: #{circuit_data_url}"
+      HTTP.post(url, json: { text: text }) if url
+    end
+
+    # Email notification
+    if ENV["ISSUE_REPORT_EMAIL"].present?
+      reporter = current_user&.name || current_user&.email || "anonymous"
+      IssueMailer.report(text: params[:text], circuit_data_url: circuit_data_url, reporter: reporter)
+                 .deliver_later
+    end
+
     head :ok, content_type: "text/html"
   end
 
