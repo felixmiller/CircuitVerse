@@ -18,6 +18,8 @@ en:
       my_circuits: "My Circuits"
       link_to_contribute: "Contribute"
       link_to_forum: "Forum"
+      link_to_impressum: "Impressum"
+      link_to_datenschutz: "Datenschutz"
       sponsor_logo_text:
         brought_by: "Brought to you by:"
         hosting_sponsor: "Hosting Sponsor:"
