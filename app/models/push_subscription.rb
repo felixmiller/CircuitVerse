@@ -14,7 +14,7 @@ class PushSubscription < ApplicationRecord
       p256dh: self[:p256dh],
       auth: self[:auth],
       vapid: {
-        subject: "mailto:support@circuitverse.org",
+        subject: "mailto:noreply@#{ENV.fetch('CALLBACK_ADDRESS', 'circuitverse.org').sub(%r{\Ahttps?://}, '')}",
         public_key: Rails.application.config.vapid_public_key,
         private_key: Rails.application.config.vapid_private_key
       }

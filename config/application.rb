@@ -50,11 +50,12 @@ module Logix
            end
 
            # Site config
-           config.site_url = "https://circuitverse.org/"
+           callback = ENV.fetch("CALLBACK_ADDRESS", "https://circuitverse.org")
+           config.site_url = "#{callback}/"
            config.site_name = "CircuitVerse"
            config.site_category = "Digital Logic Circuits"
-           config.site_download_url = "https://circuitverse.org/simulator"
-           config.site_image = "https://circuitverse.org/img/circuitverse2.svg"
+           config.site_download_url = "#{callback}/simulator"
+           config.site_image = "#{callback}/img/circuitverse2.svg"
            config.site_description = "Explore Digital circuits online with CircuitVerse. With our easy to use simulator interface, you will be building circuits in no time."
            config.slack_url = "https://circuitverse.org/slack"
   end
