@@ -5,7 +5,7 @@ class Users::CircuitverseController < ApplicationController
 
   include UsersCircuitverseHelper
 
-  before_action :authenticate_user!, only: %i[edit update groups]
+  before_action :authenticate_user!, only: %i[index edit update groups]
   before_action :set_user, except: [:typeahead_educational_institute]
   before_action :remove_previous_profile_picture, only: [:update]
 
