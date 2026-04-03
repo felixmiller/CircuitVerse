@@ -20,6 +20,9 @@ class User < ApplicationRecord
          :validatable, :omniauthable, :saml_authenticatable,
          omniauth_providers: %i[google_oauth2 facebook github gitlab]
 
+  # SAML users are verified by the IdP, skip email confirmation
+  before_create :skip_confirmation_for_saml
+
   # has_many :assignments, foreign_key: 'mentor_id', dependent: :destroy
   has_many :group_members, dependent: :destroy
   has_many :groups, through: :group_members
@@ -106,6 +109,10 @@ class User < ApplicationRecord
   end
 
   private
+
+    def skip_confirmation_for_saml
+      skip_confirmation! if provider.blank? && encrypted_password.blank?
+    end
 
     def send_welcome_mail
       UserMailer.welcome_email(self).deliver_later
