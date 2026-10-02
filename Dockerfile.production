@@ -1,5 +1,5 @@
 # Use a multi stage build for the builder
-FROM --platform=$BUILDPLATFORM ruby:3.2.1 as builder
+FROM --platform=$BUILDPLATFORM ruby:3.2.11-bookworm as builder
 
 # Set production environment
 ARG BUILDPLATFORM
@@ -62,7 +62,7 @@ RUN cp -r dist/simulatorvue/* /output/simulatorvue/
 
 # The files should now be in /app/public/simulatorvue/
 
-FROM --platform=$BUILDPLATFORM ruby:3.2.1-slim as app
+FROM --platform=$BUILDPLATFORM ruby:3.2.11-slim-bookworm as app
 
 # Copy compiled assets and application from builder and Vue simulator build stages
 COPY --from=builder /usr/src/app /usr/src/app

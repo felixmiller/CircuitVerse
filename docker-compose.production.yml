@@ -23,6 +23,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.production
+      network: host  # iptables:false in daemon.json, build steps need host network for internet
     restart: unless-stopped
     ports:
       - "127.0.0.1:3000:3000"   # ← bind to localhost ONLY
@@ -42,6 +43,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.production
+      network: host  # iptables:false in daemon.json, build steps need host network for internet
     restart: unless-stopped
     depends_on:
       - db
