@@ -1,6 +1,16 @@
 # frozen_string_literal: true
 
 module SimulatorHelper
+  # The Vue simulator bundle keeps its name across builds, but files in /public are
+  # served with a one year cache lifetime. The bundle's modification time as version
+  # parameter gives every build a new URL, so browsers fetch the new bundle once.
+  def simulator_vue_script_path(version = "v0")
+    path = "simulatorvue/#{version}/simulator-#{version}.js"
+    "/#{path}?v=#{File.mtime(Rails.public_path.join(path)).to_i}"
+  rescue Errno::ENOENT
+    "/#{path}"
+  end
+
   def return_image_file(data_url)
     str = data_url[("data:image/jpeg;base64,".length)..]
     if str.to_s.empty?

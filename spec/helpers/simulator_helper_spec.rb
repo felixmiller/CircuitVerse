@@ -9,6 +9,20 @@ describe SimulatorHelper do
     "data:image/jpeg;base64,#{image_str}"
   end
 
+  describe "#simulator_vue_script_path" do
+    let(:bundle) { Rails.public_path.join("simulatorvue/v0/simulator-v0.js") }
+
+    it "adds the bundle's modification time as version parameter" do
+      allow(File).to receive(:mtime).with(bundle).and_return(Time.zone.at(1_791_000_000))
+      expect(simulator_vue_script_path).to eq("/simulatorvue/v0/simulator-v0.js?v=1791000000")
+    end
+
+    it "returns the plain path when the bundle is missing" do
+      allow(File).to receive(:mtime).with(bundle).and_raise(Errno::ENOENT)
+      expect(simulator_vue_script_path).to eq("/simulatorvue/v0/simulator-v0.js")
+    end
+  end
+
   describe "#check_to_delete" do
     it "give true for non empty images" do
       expect(check_to_delete(data_url(""))).to be false
