@@ -8,7 +8,6 @@
     <div class="col-12 col-sm-12 col-md-6 col-lg-6">
       <div class="form-container">
         <h1 class="users-main-heading"><%= t("login") %></h1>
-        <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), local: true) do |f| %>
         <% flash.each do |key, value| %>
           <div class="alert <%= case key.to_s 
                                 when 'notice' then 'alert-success'
@@ -20,6 +19,14 @@
             <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
           </div>
         <% end %>
+        <%# HM: in production, login only works through HM SSO (SAML). SAML users have a %>
+        <%# random local password, so the email/password form only confuses them. Devise %>
+        <%# redirects here when an SSO login is rejected, so the flash above stays. %>
+        <% if Rails.env.production? %>
+        <p class="mb-4">CircuitVerse at HM uses your HM account. Log in with the same user name and password as for Moodle.</p>
+        <a class="btn primary-button users-login-primary-button" href="/users/saml/sign_in">Log in with HM account</a>
+        <% else %>
+        <%= form_with(model: resource, as: resource_name, url: session_path(resource_name), local: true) do |f| %>
         <div class="field mb-3">
           <h6><%= f.label :email %></h6>
           <div class="input-group">
@@ -67,8 +74,9 @@
           </div>
         </div>
         <%= render(AuthComponents::SocialLoginComponent.new(devise_mapping: devise_mapping, resource_name: resource_name)) %>
+        <% end %>
+        <% end %>
       </div>
-      <% end %>
     </div>
   </div>
 </div>
