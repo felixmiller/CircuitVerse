@@ -71,6 +71,9 @@ Devise.setup do |config|
 
   # Custom hook: set required fields and auto-confirm new SAML-provisioned users.
   # The IdP is the identity authority, so no email confirmation is needed.
+  # This must stay the only saml_update_resource_hook. Upstream had a second
+  # one at the end of this file that silently replaced this one, so every SAML
+  # user was created unconfirmed and locked out after allow_unconfirmed_access_for.
   config.saml_update_resource_hook = Proc.new do |user, saml_response, auth_value|
     saml_response.attributes.resource_keys.each do |key|
       user.send("#{key}=", saml_response.attribute_value_by_resource_key(key)) if user.respond_to?("#{key}=")
@@ -81,6 +84,7 @@ Devise.setup do |config|
     end
 
     if user.new_record?
+      user.name = user.email if user.name.blank?
       user.password = Devise.friendly_token(20)
       user.skip_confirmation! if user.respond_to?(:skip_confirmation!)
     end
@@ -338,20 +342,4 @@ Devise.setup do |config|
   # so you need to do it manually. For the users scope, it would be:
   # config.omniauth_path_prefix = '/my_engine/users/auth'
 
-end
-
-Devise.saml_update_resource_hook = Proc.new do |user, saml_response, auth_value|
-  saml_response.attributes.resource_keys.each do |key|
-    user.send "#{key}=", saml_response.attribute_value_by_resource_key(key)
-  end
-
-  if Devise.saml_use_subject
-    user.send "#{Devise.saml_default_user_key}=", auth_value
-  end
-
-  if user.id.nil?
-    user.name = user.email if user.name.blank?
-    user.password = Devise.friendly_token[0, 20]
-  end
-  user.save!
 end
